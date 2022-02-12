@@ -5,5 +5,7 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-
+  type = string
+  description = "AWS CLI Profile"
+  default = "aws_ssh_hub"
 }
