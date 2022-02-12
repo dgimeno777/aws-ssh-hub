@@ -1,7 +1,5 @@
 locals {
-  vpc_id            = data.terraform_remote_state.terraform-aws-vpc.outputs.vpc_id
-  public_subnet_id  = data.terraform_remote_state.terraform-aws-vpc.outputs.subnet_public_a_id
-  private_subnet_id = data.terraform_remote_state.terraform-aws-vpc.outputs.subnet_private_a_id
+  resource_name_suffix = terraform.workspace
 }
 
 variable "aws_region" {
@@ -20,4 +18,9 @@ variable "terraform_aws_vpc_workspace" {
   type        = string
   description = "Workspace of the terraform-aws-vpc remote state"
   default     = "default"
+}
+
+variable "key_name" {
+  type        = string
+  description = "Name of Key Pair to use for instances"
 }
