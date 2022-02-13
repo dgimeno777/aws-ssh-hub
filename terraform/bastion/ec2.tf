@@ -4,11 +4,23 @@ data "aws_ec2_instance_type" "t2_micro" {
 
 resource "aws_security_group" "bastion" {
   vpc_id = data.aws_vpc.vpc.id
+  tags = {
+    Name : "hub-bastion-${local.resource_name_suffix}"
+  }
   ingress {
     protocol  = "tcp"
     from_port = 22
     to_port   = 22
     cidr_blocks = [
+      local.my_cidr_block
+    ]
+  }
+  ingress {
+    protocol = "icmp"
+    from_port = 8
+    to_port   = 0
+    cidr_blocks = [
+      "${aws_eip.nat_gateway.public_ip}/32",
       local.my_cidr_block
     ]
   }
@@ -36,6 +48,15 @@ resource "aws_security_group" "bastion" {
       "0.0.0.0/0"
     ]
   }
+  egress {
+    protocol  = "icmp"
+    from_port = 8
+    to_port   = 0
+    cidr_blocks = [
+      "${aws_eip.nat_gateway.public_ip}/32",
+      local.my_cidr_block
+    ]
+  }
 }
 
 resource "aws_instance" "bastion" {
@@ -48,12 +69,26 @@ resource "aws_instance" "bastion" {
     aws_security_group.bastion.id
   ]
   tags = {
-    Name : "bastion-${local.resource_name_suffix}"
+    Name : "hub-bastion-${local.resource_name_suffix}"
+  }
+
+  connection {
+    type = "ssh"
+    host = self.public_ip
+    user = "ec2-user"
+    private_key = file(var.private_key_path)
+  }
+
+  provisioner "remote-exec" {
+    script = "${path.module}/setup/bastion/setup_instance.sh"
   }
 }
 
 resource "aws_security_group" "instance" {
   vpc_id = data.aws_vpc.vpc.id
+  tags = {
+    Name : "hub-instance-${local.resource_name_suffix}"
+  }
   ingress {
     protocol  = "tcp"
     from_port = 22
@@ -82,6 +117,6 @@ resource "aws_instance" "instance" {
     aws_security_group.instance.id
   ]
   tags = {
-    Name : "instance-${local.resource_name_suffix}"
+    Name : "hub-instance-${local.resource_name_suffix}"
   }
 }

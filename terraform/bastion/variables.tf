@@ -24,3 +24,8 @@ variable "key_name" {
   type        = string
   description = "Name of Key Pair to use for instances"
 }
+
+variable "private_key_path" {
+  type = string
+  description = "Path to your private SSH key"
+}
