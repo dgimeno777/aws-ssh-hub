@@ -7,45 +7,23 @@ resource "aws_lb" "hub" {
     data.aws_subnet.public.id
   ]
   enable_deletion_protection       = false
-  enable_cross_zone_load_balancing = true
+  enable_cross_zone_load_balancing = false
 }
 
-resource "aws_lb_listener" "hub_ssh" {
-  load_balancer_arn = aws_lb.hub.arn
-  port              = 22
-  protocol          = "TCP"
-  default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.instance.arn
-  }
+module "instance_1" {
+  source            = "./instance_target"
+  listener_port     = 5000
+  nlb_arn           = aws_lb.hub.arn
+  ec2_subnet_id     = data.aws_subnet.private.id
+  security_group_id = aws_security_group.instance.id
+  ec2_key_name      = var.key_name
 }
 
-/*
-resource "aws_lb_listener_rule" "hub" {
-  listener_arn = aws_lb_listener.hub_ssh.arn
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.instance.arn
-  }
-  condition {
-    source_ip {
-      values = [
-        "${local.my_public_ip}/32"
-      ]
-    }
-  }
-}
-*/
-resource "aws_lb_target_group" "instance" {
-  name                   = "instance-${local.resource_name_suffix}"
-  vpc_id                 = data.aws_vpc.vpc.id
-  port                   = 22
-  protocol               = "TCP"
-  target_type            = "instance"
-}
-
-resource "aws_lb_target_group_attachment" "instance" {
-  target_group_arn = aws_lb_target_group.instance.arn
-  target_id        = aws_instance.instance.id
-  port             = 22
+module "instance_2" {
+  source            = "./instance_target"
+  listener_port     = 5001
+  nlb_arn           = aws_lb.hub.arn
+  ec2_subnet_id     = data.aws_subnet.private.id
+  security_group_id = aws_security_group.instance.id
+  ec2_key_name      = var.key_name
 }
