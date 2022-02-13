@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     # Variables not allowed so hardcode
     bucket  = "dgimeno-repos"
-    key     = "aws-ssh-hub/terraform.tfstate"
+    key     = "aws-ssh-hub/nlb/terraform.tfstate"
     region  = "us-east-1"
     profile = "aws_ssh_hub"
   }
