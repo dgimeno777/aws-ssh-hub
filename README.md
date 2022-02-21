@@ -2,13 +2,11 @@
 This repo is for exploring AWS-hosted options for a SSH hub to forward users to private instances
 
 # Network Load Balancer
-A Network-type Elastic Load Balancer can be used to forward traffic to target groups for easy SSH access.
-However, NLBs do not support path-based routing so it cannot be used as a hub for connecting specific users to specific
-machines over the same port. However, an NLB listener can forward traffic from a designated port to another port on a
-target group meaning that SSH traffic received over different ports can be forwarded to the SSH port of a target group.
-If the target group only has a single member then all traffic will be routed to the target creating an SSH forwarding
-proxy. If multiple listeners are attached then a single NLB can be used as a "hub" for multiple private instances
-accessible via SSH.
+A Network-type Elastic Load Balancer can be used to forward traffic to target groups for simple SSH access.
+NLBs do not support path-based routing so it cannot be used to connect specific users to specific machines over the same port.
+However, an NLB listener can forward traffic from a designated port to another port on a target group meaning that SSH traffic from different ports can be forwarded to the SSH port of different target groups.
+If the target group only has a single member then all traffic will be routed to the same instance.
+If multiple listeners are attached then a single NLB can be used as a "hub" for multiple private instances accessible via SSH.
 
 ## NLB Diagram
 ![NLB SSH Hub Diagram](./res/nlb/NLBSSHHub.png?raw=true)
