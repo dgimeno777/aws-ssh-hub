@@ -11,19 +11,12 @@ resource "aws_lb" "hub" {
 }
 
 module "instance_1" {
-  source            = "./instance_target"
-  listener_port     = 5000
-  nlb_arn           = aws_lb.hub.arn
-  ec2_subnet_id     = data.aws_subnet.private.id
-  security_group_id = aws_security_group.instance.id
-  ec2_key_name      = var.key_name
-}
-
-module "instance_2" {
-  source            = "./instance_target"
-  listener_port     = 5001
-  nlb_arn           = aws_lb.hub.arn
-  ec2_subnet_id     = data.aws_subnet.private.id
-  security_group_id = aws_security_group.instance.id
-  ec2_key_name      = var.key_name
+  source                = "./instance_target"
+  listener_port         = 5000
+  nlb_arn               = aws_lb.hub.arn
+  ec2_subnet_id         = data.aws_subnet.private.id
+  security_group_id     = aws_security_group.instance.id
+  ec2_key_name          = var.key_name
+  ami_id                = data.aws_ami.amazon_linux.id
+  instance_profile_name = aws_iam_instance_profile.hub.name
 }

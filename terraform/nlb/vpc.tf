@@ -35,3 +35,13 @@ resource "aws_route" "nat_gateway" {
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.hub.id
 }
+
+resource "aws_vpc_endpoint" "s3" {
+  service_name        = "com.amazonaws.us-east-1.s3"
+  vpc_endpoint_type   = "Gateway"
+  vpc_id              = data.aws_vpc.vpc.id
+  private_dns_enabled = false
+  route_table_ids = [
+    data.aws_route_table.private.id
+  ]
+}

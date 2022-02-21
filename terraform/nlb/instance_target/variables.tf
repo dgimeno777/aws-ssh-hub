@@ -26,3 +26,13 @@ variable "security_group_id" {
   type        = string
   description = "ID of the EC2 instance Security Group"
 }
+
+variable "ami_id" {
+  type        = string
+  description = "ID of the AMI to use for the EC2 instance"
+}
+
+variable "instance_profile_name" {
+  type        = string
+  description = "Name of the Instance Profile for the EC2 instance"
+}

@@ -14,7 +14,7 @@ If multiple listeners are attached then a single NLB can be used as a "hub" for 
 ## NLB Upsides
 1. NLB is fully managed by AWS
 2. NLB does port forwarding so traffic is directly sent to the instance at the listener port
-3. Users can be given a static command like `ssh user@1.2.3.4 -P 5000` for SSH'ing into an instance
+3. Users can be given a static command like `ssh user@1.2.3.4 -p 5000` for SSH'ing into an instance
 
 ## NLB Downsides
 1. Pay for traffic processed by NLB which makes SSH-based file transfer expensive (mitigate with S3 VPC endpoints)
